@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Prompt Generator - Character Pose Transformation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <h1>AI Prompt Generator</h1>
+        <span class="badge">v1.0</span>
+      </div>
+      <p class="subtitle">Buat prompt AI terstruktur & presisi tinggi dari template JSON</p>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="main-content">
+      <!-- Panel Kiri: Form Input -->
+      <section class="form-panel">
+        <!-- Selector Kategori -->
+        <div class="card category-selector">
+          <label for="category-select" class="form-label">Kategori Prompt:</label>
+          <select id="category-select" class="form-select">
+            <option value="character_pose" selected>Character Pose Transformation</option>
+            <option value="image_editing" disabled>Image Editing (Akan Datang)</option>
+            <option value="product_photo" disabled>Product Photography (Akan Datang)</option>
+            <option value="3d_assets" disabled>3D Game Assets (Akan Datang)</option>
+            <option value="logo_design" disabled>Logo Design (Akan Datang)</option>
+          </select>
+        </div>
+
+        <!-- Mode Form Tabs -->
+        <div class="mode-tabs">
+          <button type="button" class="tab-btn active" id="btn-basic-mode">Mode Dasar</button>
+          <button type="button" class="tab-btn" id="btn-advanced-mode">Mode Lanjutan</button>
+        </div>
+
+        <form id="prompt-form" onsubmit="return false;">
+          <!-- Section 1: Task & Deskripsi Subjek -->
+          <div class="card form-section">
+            <h2 class="section-title">1. Task & Subjek</h2>
+            
+            <div class="form-group">
+              <label for="task-desc" class="form-label">Deskripsi Tugas (Task)</label>
+              <textarea id="task-desc" class="form-control" rows="3">Transform the subject in the input image into the specified reference pose and camera perspective while preserving the subject's original visual identity, design, outfit, accessories, props, materials, textures, colors, proportions, and visual style. The final subject must be completely visible inside the frame with zero unintended cropping and rendered as a high-resolution 8K transparent PNG.</textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="pose-desc" class="form-label">Deskripsi Pose Utama</label>
+              <textarea id="pose-desc" class="form-control" rows="2">Create an exaggerated close-to-camera perspective pose where the subject's upper body leans toward the camera while both arms extend forward and upward toward the camera lens.</textarea>
+            </div>
+          </div>
+
+          <!-- Section 2: Pose & Anatomi Detail -->
+          <div class="card form-section">
+            <h2 class="section-title">2. Detail Pose & Anatomi</h2>
+
+            <div class="form-group">
+              <label for="body-stance" class="form-label">Body Stance (Sikap Tubuh)</label>
+              <input type="text" id="body-stance" class="form-control" value="Standing while leaning the upper body toward the camera.">
+            </div>
+
+            <div class="form-group">
+              <label for="head-gaze" class="form-label">Arah Pandangan Mata (Head Gaze)</label>
+              <select id="head-gaze" class="form-select">
+                <option value="Look toward the camera lens." selected>Menatap Lensa Kamera</option>
+                <option value="Look slightly away from the camera lens.">Menatap Sedikit Menjauh</option>
+                <option value="Look to the side with dynamic gaze.">Menatap ke Samping</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="hands-importance" class="form-label">Prioritas Detail Tangan</label>
+              <select id="hands-importance" class="form-select">
+                <option value="EXTREMELY HIGH" selected>Sangat Tinggi (Extremely High)</option>
+                <option value="HIGH">Tinggi (High)</option>
+                <option value="BALANCED">Seimbang (Balanced)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="hands-desc" class="form-label">Deskripsi Posisi & Skala Tangan</label>
+              <textarea id="hands-desc" class="form-control" rows="2">Both hands must be extremely close to the camera lens to create dramatic perspective exaggeration. Place one hand toward the upper-left foreground and the other toward the right foreground.</textarea>
+            </div>
+          </div>
+
+          <!-- Section 3: Kamera & Framing -->
+          <div class="card form-section">
+            <h2 class="section-title">3. Kamera & Framing</h2>
+
+            <div class="form-group">
+              <label for="focal-length" class="form-label">Focal Length Kamera: <span id="focal-val">18mm</span></label>
+              <input type="range" id="focal-length" class="form-range" min="12" max="50" value="18" step="1">
+              <small class="form-hint">Nilai rendah (12mm-24mm) menghasilkan efek perspektif wide-angle yang kuat.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="camera-height" class="form-label">Sudut & Tinggi Kamera</label>
+              <select id="camera-height" class="form-select">
+                <option value="Camera positioned higher than the subject's head, pointing downward (20-35 deg)." selected>High Angle (Atas, Menghadap Bawah)</option>
+                <option value="Camera at eye level facing directly.">Eye Level (Sejajar Mata)</option>
+                <option value="Camera positioned lower pointing upward.">Low Angle (Bawah, Menghadap Atas)</option>
+              </select>
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="full-subject-framing" checked>
+                <span>Aktifkan <strong>Full Subject Framing</strong> (Tanpa Terpotong)</span>
+              </label>
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="adaptive-distance" checked>
+                <span>Jarak kamera adaptif otomatis jika subjek terlalu besar</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Section 4: Pencahayaan, Background & Output -->
+          <div class="card form-section">
+            <h2 class="section-title">4. Light, Background & Output</h2>
+
+            <div class="form-group">
+              <label for="lighting-style" class="form-label">Gaya Pencahayaan (Lighting)</label>
+              <select id="lighting-style" class="form-select">
+                <option value="Bright high-key studio lighting." selected>Bright High-Key Studio</option>
+                <option value="Dramatic cinematic lighting with rim light.">Dramatic Cinematic</option>
+                <option value="Soft natural diffused daylight.">Soft Natural Daylight</option>
+                <option value="Cyberpunk neon lighting.">Cyberpunk Neon</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="bg-type" class="form-label">Tipe Background</label>
+              <select id="bg-type" class="form-select">
+                <option value="Transparent" selected>Transparan (PNG Alpha)</option>
+                <option value="Solid Studio White">Putih Polos Studio</option>
+                <option value="Minimalist Neutral Grey">Abu-abu Neutral Studio</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="output-res" class="form-label">Resolusi Target Output</label>
+              <select id="output-res" class="form-select">
+                <option value="8K" selected>8K Ultra HD (7680px)</option>
+                <option value="4K">4K UHD (3840px)</option>
+                <option value="2K">2K Full HD (2048px)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Advanced Mode Only Fields -->
+          <div id="advanced-fields" class="advanced-section hidden">
+            <div class="card form-section">
+              <h2 class="section-title">5. Pengaturan Lanjutan (Advanced)</h2>
+
+              <div class="form-group">
+                <label for="identity-preservation" class="form-label">Identity Preservation Priority</label>
+                <select id="identity-preservation" class="form-select">
+                  <option value="ABSOLUTE" selected>ABSOLUTE (Wajib Pertahankan 100%)</option>
+                  <option value="HIGH">HIGH (Toleransi Perubahan Kecil)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="negative-prompt-custom" class="form-label">Negative Prompt Tambahan (Pisahkan dengan koma)</label>
+                <textarea id="negative-prompt-custom" class="form-control" rows="3" placeholder="Contoh: blurry, bad anatomy, floating limbs..."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="final-instruction-custom" class="form-label">Kustomisasi Instruksi Akhir (Final Instruction)</label>
+                <textarea id="final-instruction-custom" class="form-control" rows="4">Recreate the subject using the reference pose and extreme wide-angle camera perspective while preserving everything from the original input image. The hands must be dramatically closer and larger than the body because of genuine camera perspective. The camera should be positioned above the subject and aimed downward. However, complete subject visibility is mandatory: every part of the subject, including all fingers, hands, hair, clothing, accessories, props, legs, feet, and shoes, must remain completely inside the frame with a small transparent safety margin. If necessary, automatically move the camera farther away or adjust the composition to prevent any cropping. Render the final result in ultra-high-quality 8K PNG with a genuinely transparent alpha background.</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Buttons -->
+          <div class="form-actions">
+            <button type="button" id="btn-generate" class="btn btn-primary">Generate Prompt</button>
+            <button type="button" id="btn-reset" class="btn btn-secondary">Reset Default</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Panel Kanan: Hasil Prompt -->
+      <section class="output-panel">
+        <div class="card output-card">
+          <!-- Output Header & Controls -->
+          <div class="output-header">
+            <div class="output-tabs">
+              <button type="button" class="tab-btn active" id="btn-view-json">JSON Mode</button>
+              <button type="button" class="tab-btn" id="btn-view-text">Text Mode</button>
+            </div>
+            <div id="toast-msg" class="toast hidden">Prompt berhasil diperbarui!</div>
+          </div>
+
+          <!-- Output Display Area -->
+          <div class="output-body">
+            <pre id="output-display-json" class="code-block"></pre>
+            <div id="output-display-text" class="text-block hidden"></div>
+          </div>
+
+          <!-- Actions Footer -->
+          <div class="output-footer">
+            <button type="button" id="btn-copy-json" class="btn btn-action">📋 Copy JSON</button>
+            <button type="button" id="btn-copy-text" class="btn btn-action">📄 Copy Prompt Teks</button>
+            <button type="button" id="btn-download-json" class="btn btn-outline">📥 Unduh .json</button>
+            <button type="button" id="btn-download-txt" class="btn btn-outline">📥 Unduh .txt</button>
+          </div>
+          <div class="disclaimer">
+            * Alat ini hanya menghasilkan prompt teks/JSON terstruktur. Jalankan prompt ini pada AI Generator seperti Midjourney, Stable Diffusion, atau FLUX.
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
